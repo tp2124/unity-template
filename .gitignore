@@ -1,3 +1,4 @@
 *.suo
 Library/
 obj/
+Temp/
