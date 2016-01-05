@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Assets.Scripts;
+using UnityEngine;
 
 /// <summary>
 /// Lose Splash screen
@@ -25,7 +25,7 @@ public class Lose : MonoBehaviour
         GUI.Label(new Rect((Screen.width - ButtonWidth) / 2, (Screen.height - ButtonHeight) / 2, ButtonWidth, ButtonHeight), "Game Over\nPress any key Play Again");
         if(Input.anyKeyDown){
             Player.ResetStats();
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Level1");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.LEVEL_NAME_LEVEL_1);
         }
     }
     #endregion

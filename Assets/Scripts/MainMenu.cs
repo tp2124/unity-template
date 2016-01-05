@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Assets.Scripts;
+using UnityEngine;
 
 /// <summary>
 /// Main Menu UI
@@ -28,7 +28,7 @@ public class MainMenu : MonoBehaviour
         //This makes a button to start the game
         GUI.Label(new Rect(10, 10, ButtonWidth, ButtonHeight), instructionText);
         if (Input.anyKeyDown) {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Level1");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.LEVEL_NAME_LEVEL_1);
         }
     }
     #endregion

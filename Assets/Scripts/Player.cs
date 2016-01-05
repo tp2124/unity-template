@@ -1,5 +1,6 @@
-using UnityEngine;
+using Assets.Scripts;
 using System.Collections;
+using UnityEngine;
 
 /// <summary>
 /// Main player/ship
@@ -16,7 +17,7 @@ public class Player : MonoBehaviour
     public static bool GameOver = false;
     public static int Multiplier = 0;
 
-    private int m_BestScore = 0;
+    //private int m_BestScore = 0;
     private float m_StartProjectileHigher = 2.3f;
     #endregion
 
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void Update()
     {
-        float amtToMove = Input.GetAxisRaw("Horizontal") * PlayerSpeed * Time.deltaTime;
+        float amtToMove = Input.GetAxisRaw(Constants.HORIZONTAL_AXIS) * PlayerSpeed * Time.deltaTime;
         //  More flowy of movement    
         //float amtToMove = Input.GetAxis("Horizontal")*PlayerSpeed * Time.deltaTime;
 
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour
         transform.Translate(Vector3.right * amtToMove);
 
         // With Absolute Value
-        if (Mathf.Abs(transform.position.x) > 7.0)
+        if (Mathf.Abs(transform.position.x) > 7.0f)
         {
             transform.position = new Vector3(-transform.position.x, transform.position.y, transform.position.z);
         }
@@ -47,12 +48,14 @@ public class Player : MonoBehaviour
         //    transform.position = new Vector3(-7.5f, transform.position.y, transform.position.z);
         //}
 
-        if (Input.GetKeyDown("space") && Player.Lives > 0)
+        if (Input.GetKeyDown(Constants.SPACE_KEY) && Player.Lives > 0)
         {
             Vector3 pos = new Vector3(transform.position.x, transform.position.y + m_StartProjectileHigher, transform.position.z);
             Instantiate(ProjectilePrefab, pos, /*transform.rotation*/ Quaternion.identity);
             //if (bestScore < Player.Score * Player.Multiplier)
+            //{
             //    bestScore = Player.Score * Player.Multiplier;
+            //}
             Player.Lives--;
         }
     }
@@ -86,15 +89,12 @@ public class Player : MonoBehaviour
     /// <param name="otherObj"></param>
     void OnTriggerEnter(Collider otherObj)
     {
-        //     Debug.Log("Collision hit enemy" + otherObj.name);
-        if (otherObj.tag == "enemy"   /* this is the tag in the top left of the inspector*/)
+        //Debug.Log("Collision hit enemy" + otherObj.name);
+        if (otherObj.tag.Equals(Constants.ENEMY_TAG, System.StringComparison.OrdinalIgnoreCase)) // this is the tag in the top left of the inspector
         {
-
             Player.Lives--;
-
-            Enemy j = (Enemy)otherObj.GetComponent("Enemy");
-            j.SetRandomStartLoc();
-
+            Enemy enemy = otherObj.GetComponent<Enemy>();
+            enemy.SetRandomStartLoc();
             StartCoroutine(DestroyShip());
         }
     }
@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Win");
+            UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.LEVEL_NAME_WIN);
         }
     }
     #endregion

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// 
@@ -113,8 +112,8 @@ public class Enemy : MonoBehaviour
     /// <param name="pos"></param>
     /// <param name="rot"></param>
     void CreateNewEnemy(Vector3 pos, Quaternion rot) { 
-        Enemy j = new Enemy();
-        Instantiate(j.gameObject, pos, rot);
+        Enemy enemy = new Enemy();
+        Instantiate(enemy.gameObject, pos, rot);
     }
     #endregion
 }

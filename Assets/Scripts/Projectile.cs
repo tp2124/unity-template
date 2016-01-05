@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using UnityEngine;
 using System.Collections;
 
@@ -19,7 +20,7 @@ public class Projectile : MonoBehaviour
     /// <summary>
     /// //useful to count out lookups
     /// </summary>
-    private Transform m_MyTransform; 
+    private Transform m_MyTransform;
     #endregion
 
     #region Event Handlers
@@ -45,7 +46,7 @@ public class Projectile : MonoBehaviour
     /// </summary>
     void Update()
     {
-        float amtToTranslate = Input.GetAxisRaw("Horizontal") * m_SideSpeed * Time.deltaTime;
+        float amtToTranslate = Input.GetAxisRaw(Constants.HORIZONTAL_AXIS) * m_SideSpeed * Time.deltaTime;
         //Translating
         transform.Translate(Vector3.left * amtToTranslate * DirectionCoefficient);
         float amtToMove = ProjectSpeed * Time.deltaTime;
@@ -73,18 +74,18 @@ public class Projectile : MonoBehaviour
     /// <param name="otherObj"></param>
     void OnTriggerEnter(Collider otherObj)
     {
-        //     Debug.Log("Collision hit enemy" + otherObj.name);
-        if (otherObj.tag == "enemy"   /* this is the tag in the top left of the inspector*/)
+        //Debug.Log("Collision hit enemy" + otherObj.name);
+        if (otherObj.tag.Equals(Constants.ENEMY_TAG, System.StringComparison.OrdinalIgnoreCase)) //this is the tag in the top left of the inspector 
         {
 
             //For kiling enemy
             //   Destroy(otherObj.gameObject);
             //Must cast this component
-            Enemy j = (Enemy)otherObj.GetComponent("Enemy");
-            Vector3 enPos = new Vector3(j.transform.position.x, j.transform.position.y, j.transform.position.z);
-            Instantiate(ExplosionPrefab, enPos, transform.rotation);
+            Enemy enemy = otherObj.GetComponent<Enemy>();
+            Vector3 enemyPos = new Vector3(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
+            Instantiate(ExplosionPrefab, enemyPos, transform.rotation);
 
-            j.SetRandomStartLoc();
+            enemy.SetRandomStartLoc();
             //Instantiate(EnemyPrefab, enPos, Quaternion.identity);
             //j.createNewEnemy(j.gameObject.transform.position, Quaternion.identity);
 
