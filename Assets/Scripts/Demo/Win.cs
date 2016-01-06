@@ -25,7 +25,6 @@ public class Win : MonoBehaviour
         GUI.Label(new Rect((Screen.width - ButtonWidth) / 2, (Screen.height - ButtonHeight) / 2, ButtonWidth, ButtonHeight), "You Won!\nPress any key Play Again");
         if (Input.anyKeyDown)
         {
-            Player.ResetStats();
             UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.LEVEL_NAME_MAIN_MENU);
         }
     }

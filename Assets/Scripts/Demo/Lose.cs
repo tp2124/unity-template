@@ -24,7 +24,6 @@ public class Lose : MonoBehaviour
         GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), BackgroundTexture);
         GUI.Label(new Rect((Screen.width - ButtonWidth) / 2, (Screen.height - ButtonHeight) / 2, ButtonWidth, ButtonHeight), "Game Over\nPress any key Play Again");
         if(Input.anyKeyDown){
-            Player.ResetStats();
             UnityEngine.SceneManagement.SceneManager.LoadScene(Constants.LEVEL_NAME_LEVEL_1);
         }
     }

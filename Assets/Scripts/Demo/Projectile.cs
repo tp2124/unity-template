@@ -35,7 +35,6 @@ public class Projectile : MonoBehaviour
     /// </summary>
     void Start()
     {
-        m_SideSpeed = Player.PlayerSpeed;
         m_NewProjectileSpeed = ProjectSpeed;
         m_MyTransform = transform;
     }
@@ -54,8 +53,8 @@ public class Projectile : MonoBehaviour
 
         if (m_MyTransform.transform.position.y < -6.3f)
         {
-            if (Player.Lives == 0)
-                Player.GameOver = true;
+            //if (Player.Lives == 0)
+            //    Player.GameOver = true;
             Destroy(this.gameObject);
         }
 
@@ -107,8 +106,6 @@ public class Projectile : MonoBehaviour
             //Killing shot
             // doing Destroy(this) will just kill the script 
             Destroy(gameObject);
-            Player.Score += 7;
-            Player.Multiplier++;
             //if (Player.Lives == 0)
             //{
             //    Application.LoadLevel(3);

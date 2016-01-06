@@ -20,6 +20,7 @@ namespace Assets.Scripts
         #region Unity Parsed Values
         public static readonly String SPACE_KEY = "space";
         public static readonly String HORIZONTAL_AXIS = "Horizontal";
+        public static readonly String VERTICAL_AXIS = "Vertical";
         #endregion
         #endregion
     }
