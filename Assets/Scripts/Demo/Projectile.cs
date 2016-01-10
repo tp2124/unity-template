@@ -74,7 +74,7 @@ public class Projectile : MonoBehaviour
     void OnTriggerEnter(Collider otherObj)
     {
         //Debug.Log("Collision hit enemy" + otherObj.name);
-        if (otherObj.tag.Equals(Constants.ENEMY_TAG, System.StringComparison.OrdinalIgnoreCase)) //this is the tag in the top left of the inspector 
+        if (otherObj.tag.Equals(Constants.PLAYER_TAG, System.StringComparison.OrdinalIgnoreCase)) //this is the tag in the top left of the inspector 
         {
 
             //For kiling enemy

@@ -1,4 +1,5 @@
 using Assets.Scripts;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,30 +10,41 @@ public class Player : MonoBehaviour
 {
     #region Properties
     public float MoveSpeed = 4.0f;
-    public float Gravity = 1.75f;
-    public int Score = 0;
+    public float JumpSpeed = 50.0f;
     public int Health = 2;
 
+    [HideInInspector]
+    public float Gravity;
+    [HideInInspector]
+    public int Score = 0;
+
     private bool Dead = false;          // Whether or not the enemy is dead.
+    private bool ApplyGravity = true; 
     private int PlayerNumber;
+    private Vector2 Velocity;
+    #endregion
+
+    #region Static Variables
+    /// <summary>
+    /// This will clamp only the fall speed of the velocity for each frame.
+    /// </summary>
+    public static readonly float MAX_FALL_SPEED = -0.7f; 
     #endregion
 
     #region Event Handlers
     /// <summary>
     /// Update is called every frame, if the MonoBehaviour is enabled.
-    /// Update is the most commonly used function to implement any kind of game behaviour.
+    /// Update is the most commonly used function to implement any kind of game behavior.
     /// </summary>
     public void Update()
     {
-        ApplyGravity();
+        // This is a left handed based coordinate system with Y axis being the world vertical axis. 
+        float verticalInput = Input.GetAxisRaw(Constants.VERTICAL_AXIS) * Time.deltaTime;
+        float horizontalInput = Input.GetAxisRaw(Constants.HORIZONTAL_AXIS) * Time.deltaTime;
 
-        Vector3 inputTranslation;
-        float verticalTranslationCoef = Input.GetAxisRaw(Constants.VERTICAL_AXIS) * MoveSpeed * Time.deltaTime;
-        float horizontalTranslationCoef = Input.GetAxisRaw(Constants.HORIZONTAL_AXIS) * MoveSpeed * Time.deltaTime;
-        inputTranslation = Vector3.up * verticalTranslationCoef;
-        inputTranslation += Vector3.right * horizontalTranslationCoef;
-        //transform.Translate(Vector3.left * amtToMove);
-        transform.Translate(inputTranslation, Space.World);
+        HandleActionInput(horizontalInput, verticalInput);
+
+        HandleMovement(horizontalInput, verticalInput);
 
 
         //// With Absolute Value
@@ -131,7 +143,11 @@ public class Player : MonoBehaviour
     /// <param name="otherObj"></param>
     public void OnTriggerEnter(Collider otherObj)
     {
-        Gravity = 0.0f;
+        if (otherObj.tag.Equals(Constants.PLATFORM_TAG, StringComparison.OrdinalIgnoreCase))
+        {
+            Velocity.y = 0.0f;
+            ApplyGravity = false;
+        }
         //Debug.Log("Collision hit enemy" + otherObj.name);
         //if (otherObj.tag.Equals(Constants.ENEMY_TAG, System.StringComparison.OrdinalIgnoreCase)) // this is the tag in the top left of the inspector
         //{
@@ -143,24 +159,84 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// Tune these to get around using the editor
     /// </summary>
     public void Awake()
     {
         Health = 2;
         Score = 0;
         Dead = false;
-        MoveSpeed = 4.0f;
+        MoveSpeed = 16.0f;
+        Gravity = 3.0f;
+        JumpSpeed = 1.0f;
+        Velocity = new Vector2(0.0f, 0.0f);
     }
     #endregion
 
     #region Private Methods
-    private void ApplyGravity()
+    /// <summary>
+    /// Handle initializing game play mechanics. EX: check if attacking has been inputted. 
+    /// </summary>
+    private void HandleActionInput(float horizontalInput, float verticalInput)
     {
-        if (Gravity != 0.0f)
+        HandleMeleeAttack(horizontalInput, verticalInput);
+        HandleRangedAttack(horizontalInput, verticalInput);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="horizontalInput"></param>
+    /// <param name="verticalInput"></param>
+    private void HandleMeleeAttack(float horizontalInput, float verticalInput)
+    {
+        if (Input.GetButtonDown(Constants.MELEE_ATTACK_BUTTON_NAME))
+        {
+            Debug.LogFormat("Melee attack triggered. ({0}, {1})", horizontalInput, verticalInput);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="horizontalInput"></param>
+    /// <param name="verticalInput"></param>
+    private void HandleRangedAttack(float horizontalInput, float verticalInput)
+    {
+        if (Input.GetButtonDown(Constants.RANGED_ATTACK_BUTTON_NAME))
+        {
+            Debug.LogFormat("Ranged attack triggered. ({0}, {1})", horizontalInput, verticalInput);
+        }
+    }
+
+    /// <summary>
+    /// Handling all movement based inputs.
+    /// </summary>
+    private void HandleMovement(float horizontalInput, float verticalInput)
+    {
+        ApplyConstantForces();
+
+        if (Input.GetButtonDown(Constants.JUMP_KEY))
+        {
+            Debug.LogFormat("Jump triggered. ({0}, {1})", horizontalInput, verticalInput);
+            Velocity.y = JumpSpeed;
+            ApplyGravity = true;
+        }
+        float horizontalTranslationCoef = horizontalInput * MoveSpeed;
+        Velocity.x = horizontalTranslationCoef;
+        Velocity.y = Velocity.y < MAX_FALL_SPEED ? MAX_FALL_SPEED : Velocity.y;
+        transform.Translate(Velocity.x, Velocity.y, 0.0f);
+    }
+
+    /// <summary>
+    /// Apply all of gravity and constant 
+    /// </summary>
+    private void ApplyConstantForces()
+    {
+        if (ApplyGravity)
         {
             float gravityTranslationCoef = Gravity * Time.deltaTime;
-            transform.Translate(Vector3.down * gravityTranslationCoef);
+            Velocity.y -= gravityTranslationCoef;
         }
     }
 

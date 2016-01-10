@@ -10,12 +10,6 @@ namespace Assets.Scripts
     public class MeleeAttack : MonoBehaviour
     {
         #region Properties
-        //[HideInInspector]
-        public static readonly String MELEE_ATTACK_BUTTON = "MeleeAttack";
-
-
-
-
         #endregion
 
         #region Event Handlers
@@ -23,7 +17,7 @@ namespace Assets.Scripts
         void Update()
         {
             // If the fire button is pressed...
-            if (Input.GetButtonDown(MELEE_ATTACK_BUTTON))
+            if (Input.GetButtonDown(Constants.MELEE_ATTACK_BUTTON_NAME))
             {
 
             }
