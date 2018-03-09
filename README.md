@@ -1,2 +1,2 @@
 # SwagGame
-Game to collaborate with old friends.
+Unity game to collaborate with old friends.
